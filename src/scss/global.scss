@@ -1,0 +1,13 @@
+
+/**
+ *  js机制：1rem = 根元素fontSize px
+ *  使fontSize自适应页面宽度，从而使所有的rem单位都是自适应的
+ *
+ *  官方以IPhone6的页面宽度为标准 750px，1px转为2rem
+ *  由👆 得：1px = 1/(750/10)/2 rem
+ *  则👇 封装传入多少px就多少除以fontSize，得到rem单位的值（自适应）
+*/
+$fonSize: 37.5; // 写死！这个fontSize不是根元素自适应那个
+@function px2rem($px){
+  @return ($px / $fonSize) +rem;
+}
