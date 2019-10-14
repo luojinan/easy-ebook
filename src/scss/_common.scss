@@ -1,0 +1,39 @@
+button{
+    border: none;
+    outline:none
+}
+//默认按钮类样式
+.btn-common{
+    border-radius:18px;
+    height: 37px;
+    font-size: 15px;
+    background:linear-gradient(-90deg,rgba(250,200,50,1),rgba(230,150,48,1));
+    box-shadow:0px 2px 15px 0px rgba(240,180,45,0.45);
+}
+button:disabled{
+    background:linear-gradient(-90deg,rgba(250,200,50,1),rgba(230,168,48,1));
+    box-shadow:0px 2px 15px 0px rgba(240,180,45,0.45);
+    opacity:0.4;
+}
+
+input{
+    border: none;
+    font-size: 16px;
+    color: #000;
+    outline:none;
+}
+input::placeholder{
+    color: #aaaaaa;
+}
+input:disabled {
+    color: #333333;
+    background: #fff;
+}
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+.container{
+    background: #fff;
+}
+
