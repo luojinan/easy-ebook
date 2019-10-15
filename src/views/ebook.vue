@@ -1,18 +1,78 @@
 <template>
   <div class="ebook">
-    ebook页面
+    <div class="ebook-wrapper">
+      <div id="book-reader"></div>
+      <div class="ebook-mask">
+        <div class="ebook-mask_left" @click="prePage"></div>
+        <div class="ebook-mask_center"></div>        
+        <div class="ebook-mask_right" @click="nextPage"></div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import Epub from 'epubjs'
+const _staticBookUrl = '/static/Wonder.epub'
 export default {
   data(){
     return {
+      rendition:''
+    }
+  },
+  methods:{
+    // 点击左边蒙板，触发ebook类的上一页方法
+    prePage(){
+      console.log('上一页');
+      if(this.rendition) this.rendition.prev()
+    },  
+    // 点击左边蒙板，触发ebook类的下一页方法
+    nextPage(){
+      console.log('下一页');
+      if(this.rendition) this.rendition.next()
+    },
+    createdEpub(){
+      // 实例化依赖的类（传入电子书资源）
+      const book = new Epub(_staticBookUrl)
+      console.log(book)
+      // 把电子书生成dom
+      this.rendition = book.renderTo('book-reader',{
+        width:window.innerWidth,
+        height:window.innerHeight
+      })
+      // 把生成的dom渲染进页面
+      this.rendition.display()
 
     }
+  },
+  mounted(){
+    this.createdEpub()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+@import '../scss/global';
+.ebook{
+  position: relative;
+  .ebook-wrapper{
+    .ebook-mask{
+      display: flex;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      .ebook-mask_left{
+        flex: 0 0 px2rem(100);
+      }
+      .ebook-mask_center{
+        flex: 1;
+      }
+      .ebook-mask_right{
+        flex: 0 0 px2rem(100);
+      }
+    }
+  }
+}
 </style>

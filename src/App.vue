@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <span class="icon-back"></span>
-    <img src="./assets/logo.png">
     <router-view/>
   </div>
 </template>
@@ -22,5 +20,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 </script>
 
 <style lang="scss">
-@import "./scss/style.scss";
+@import "scss/style.scss";
+@import 'scss/global';
+#app{
+  font-size: px2rem(14);
+}
 </style>
