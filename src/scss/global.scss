@@ -11,3 +11,16 @@ $fonSize: 37.5; // 写死！这个fontSize不是根元素自适应那个
 @function px2rem($px){
   @return ($px / $fonSize) +rem;
 }
+
+// 图标样式
+.icon{
+  font-size: px2rem(20);
+  color: #333;
+}
+
+// mixin居中样式代码片段
+@mixin  center() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
