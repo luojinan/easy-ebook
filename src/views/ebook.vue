@@ -1,42 +1,52 @@
 <template>
   <div class="ebook">
     <!-- 页面顶部部分 -->
-    <div class="ebook-header">
-      <div class="ebook-header_left"><span class="icon-back icon"></span></div>
-      <div class="ebook-header_right">
-        <div class="ebook-header_right--icon"><span class="icon-cart icon"></span></div>
-        <div class="ebook-header_right--icon"><span class="icon-person icon"></span></div>
-        <div class="ebook-header_right--icon"><span class="icon-more icon"></span></div>
+    <transition name="slide-down">
+      <div class="ebook-header" v-show="isShowControl">
+        <div class="ebook-header_left"><span class="icon-back icon"></span></div>
+        <div class="ebook-header_right">
+          <div class="ebook-header_right--icon"><span class="icon-cart icon"></span></div>
+          <div class="ebook-header_right--icon"><span class="icon-person icon"></span></div>
+          <div class="ebook-header_right--icon"><span class="icon-more icon"></span></div>
+        </div>
       </div>
-    </div>
+    </transition>
     <!-- 阅读器主体部分 -->
     <div class="ebook-wrapper">
       <div id="book-reader"></div>
       <div class="ebook-mask">
         <div class="ebook-mask_left" @click="prePage"></div>
-        <div class="ebook-mask_center"></div>        
+        <div class="ebook-mask_center" @click="showControl"></div>        
         <div class="ebook-mask_right" @click="nextPage"></div>
       </div>
     </div>
     <!-- 页面底部部分 -->
-    <div class="ebook-footer">
-      <div class="ebook-footer_icon"><span class="icon-menu icon"></span></div>
-      <div class="ebook-footer_icon"><span class="icon-set icon"></span></div>
-      <div class="ebook-footer_icon"><span class="icon-bright icon"></span></div>
-      <div class="ebook-footer_icon"><span class="icon-a icon">A</span></div>
-    </div>
+    <transition name="slide-up">
+      <div class="ebook-footer" v-show="isShowControl">
+        <div class="ebook-footer_icon"><span class="icon-menu icon"></span></div>
+        <div class="ebook-footer_icon"><span class="icon-set icon"></span></div>
+        <div class="ebook-footer_icon"><span class="icon-bright icon"></span></div>
+        <div class="ebook-footer_icon"><span class="icon-a icon">A</span></div>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
-import Epub from 'epubjs'
+import Epub from 'epubjs' 
 const _staticBookUrl = '/static/Wonder.epub'
 export default {
   data(){
     return {
-      rendition:''
+      rendition:'',
+      isShowControl:false
     }
   },
   methods:{
+    // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
+    showControl(){
+      console.log('点击显示上下控制栏');
+      this.isShowControl = !this.isShowControl
+    },
     // 点击左边蒙板，触发ebook类的上一页方法
     prePage(){
       console.log('上一页');
