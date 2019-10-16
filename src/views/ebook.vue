@@ -12,7 +12,7 @@
       </div>
     </div>
     <!-- 页面底部部分 -->
-    <ebook-footer :isShow="isShowControl" />
+    <ebook-footer :isShow="isShowControl" :defaultFontSize="defaultFontSize" @setFontSize="setFontSize"/>
   </div>
 </template>
 <script>
@@ -29,10 +29,18 @@ export default {
   data(){
     return {
       rendition:'',
-      isShowControl:false
+      themes:'',
+      isShowControl:false,
+      defaultFontSize:16
     }
   },
   methods:{
+    // 底部选择字号事件
+    setFontSize(fontSize){
+      console.log(fontSize);
+      this.defaultFontSize = fontSize
+      this.themes.fontSize(`${fontSize}px`)
+    },
     // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
     showControl(){
       console.log('点击显示上下控制栏');
@@ -64,7 +72,9 @@ export default {
       })
       // 把生成的dom渲染进页面
       this.rendition.display()
-
+      // 获取到实例类的主题操作对象
+      this.themes = this.rendition.themes
+      this.themes.fontSize(`${defaultFontSize}px`)  // 初始化epub显示为自定义字号
     }
   },
   mounted(){

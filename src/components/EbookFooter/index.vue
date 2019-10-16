@@ -21,7 +21,7 @@
               <!-- 左横线 -->
               <div class="selected-line"></div>
               <!-- 竖线部分 -->
-              <div class="selected-point_wrapper">
+              <div class="selected-point_wrapper" @click="setFontSize(item)">
                 <!-- 圆形部分 -->
                 <div class="selected-point" v-show="defaultFontSize==item">
                   <div class="selected-point_brackpoint"></div>
@@ -48,7 +48,7 @@ export default {
     },
     fontSizeList:{
       type:Array,
-      default:[14,16,18,20,22,24]
+      default:()=>[14,16,18,20,22,24]
     },
     defaultFontSize:{
       type:[String,Number],
@@ -61,7 +61,9 @@ export default {
     }
   },
   methods:{
-
+    setFontSize(fontSize){
+      this.$emit('setFontSize',fontSize)
+    }
   },
   watch:{
     isShow(newVal){
@@ -81,7 +83,7 @@ export default {
     left: 0;
     width: 100%;
     height: px2rem(44);
-    z-index: 101;
+    z-index: 102;
     background-color: #fff;
     box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
     &.hide-box-shadow{
@@ -99,9 +101,10 @@ export default {
   .ebook-footer_setter{
     position: absolute;
     left: 0;
-    bottom: px2rem(48);
+    bottom: px2rem(44);
     width: 100%;
     height: px2rem(40);
+    z-index: 101;
     background-color: #fff;
     box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
     .setter-fontsize{
