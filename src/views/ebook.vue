@@ -51,7 +51,7 @@ export default {
       console.log('上一页');
       if(this.rendition) {
         this.rendition.prev()
-        this.isShowControl = !this.isShowControl
+        this.isShowControl && (this.isShowControl = false)
       }
     },  
     // 点击左边蒙板，触发ebook类的下一页方法
@@ -59,7 +59,7 @@ export default {
       console.log('下一页');
       if(this.rendition) {
         this.rendition.next()
-        this.isShowControl = !this.isShowControl
+        this.isShowControl && (this.isShowControl = false)
       }
     },
     createdEpub(){
@@ -74,7 +74,7 @@ export default {
       this.rendition.display()
       // 获取到实例类的主题操作对象
       this.themes = this.rendition.themes
-      this.themes.fontSize(`${defaultFontSize}px`)  // 初始化epub显示为自定义字号
+      this.themes.fontSize(`${this.defaultFontSize}px`)  // 初始化epub显示为自定义字号
     }
   },
   mounted(){
