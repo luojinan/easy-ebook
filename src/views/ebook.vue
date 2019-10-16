@@ -12,7 +12,7 @@
       </div>
     </div>
     <!-- 页面底部部分 -->
-    <ebook-footer v-show="isShowControl" />
+    <ebook-footer :isShow="isShowControl" />
   </div>
 </template>
 <script>
@@ -41,12 +41,18 @@ export default {
     // 点击左边蒙板，触发ebook类的上一页方法
     prePage(){
       console.log('上一页');
-      if(this.rendition) this.rendition.prev()
+      if(this.rendition) {
+        this.rendition.prev()
+        this.isShowControl = !this.isShowControl
+      }
     },  
     // 点击左边蒙板，触发ebook类的下一页方法
     nextPage(){
       console.log('下一页');
-      if(this.rendition) this.rendition.next()
+      if(this.rendition) {
+        this.rendition.next()
+        this.isShowControl = !this.isShowControl
+      }
     },
     createdEpub(){
       // 实例化依赖的类（传入电子书资源）
