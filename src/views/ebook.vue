@@ -1,16 +1,7 @@
 <template>
   <div class="ebook">
     <!-- 页面顶部部分 -->
-    <transition name="slide-down">
-      <div class="ebook-header" v-show="isShowControl">
-        <div class="ebook-header_left"><span class="icon-back icon"></span></div>
-        <div class="ebook-header_right">
-          <div class="ebook-header_right--icon"><span class="icon-cart icon"></span></div>
-          <div class="ebook-header_right--icon"><span class="icon-person icon"></span></div>
-          <div class="ebook-header_right--icon"><span class="icon-more icon"></span></div>
-        </div>
-      </div>
-    </transition>
+    <ebook-header v-show="isShowControl" />
     <!-- 阅读器主体部分 -->
     <div class="ebook-wrapper">
       <div id="book-reader"></div>
@@ -21,20 +12,20 @@
       </div>
     </div>
     <!-- 页面底部部分 -->
-    <transition name="slide-up">
-      <div class="ebook-footer" v-show="isShowControl">
-        <div class="ebook-footer_icon"><span class="icon-menu icon"></span></div>
-        <div class="ebook-footer_icon"><span class="icon-set icon"></span></div>
-        <div class="ebook-footer_icon"><span class="icon-bright icon"></span></div>
-        <div class="ebook-footer_icon"><span class="icon-a icon">A</span></div>
-      </div>
-    </transition>
+    <ebook-footer v-show="isShowControl" />
   </div>
 </template>
 <script>
+import EbookHeader from '@/components/EbookHeader/index'
+import EbookFooter from '@/components/EbookFooter/index'
 import Epub from 'epubjs' 
 const _staticBookUrl = '/static/Wonder.epub'
+
 export default {
+  components:{
+    EbookHeader,
+    EbookFooter
+  },
   data(){
     return {
       rendition:'',
@@ -60,7 +51,6 @@ export default {
     createdEpub(){
       // 实例化依赖的类（传入电子书资源）
       const book = new Epub(_staticBookUrl)
-      console.log(book)
       // 把电子书生成dom
       this.rendition = book.renderTo('book-reader',{
         width:window.innerWidth,
@@ -81,34 +71,6 @@ export default {
 @import '../scss/global';
 .ebook{
   position: relative;
-  .ebook-header{
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: px2rem(48);
-    background-color: #fff;
-    z-index: 101;
-    box-shadow: 0 px2rem(8) px2rem(8) rgba(0, 0, 0, .15);
-    .ebook-header_left{
-      flex: 0 0 px2rem(40);
-      @include center;
-      .icon-back{
-        font-size: px2rem(18)
-      }
-    }
-    .ebook-header_right{
-      flex: 1;
-      display: flex;
-      justify-content: flex-end;  // 只写end是无效的
-      .ebook-header_right--icon{
-        flex: 0 0 px2rem(40);
-        @include center;
-      }
-    }
-  }
-
   .ebook-wrapper{
     .ebook-mask{
       display: flex;
@@ -130,23 +92,5 @@ export default {
     }
   }
 
-  .ebook-footer{
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: px2rem(44);
-    z-index: 101;
-    background-color: #fff;
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
-    .ebook-footer_icon{
-      flex: 1;
-      @include center;
-      .icon-set,.icon-bright{
-        font-size: px2rem(26);
-      }
-    }
-  }
 }
 </style>
