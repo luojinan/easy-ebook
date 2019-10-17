@@ -12,12 +12,20 @@
       </div>
     </div>
     <!-- 页面底部部分 -->
-    <ebook-footer :isShow="isShowControl" :defaultFontSize="defaultFontSize" @setFontSize="setFontSize"/>
+    <ebook-footer 
+      :isShow="isShowControl"
+      :defaultFontSize="defaultFontSize" 
+      @setFontSize="setFontSize"
+      :themeList="themeList"
+      :defaultTheme="defaultTheme" 
+      @setTheme="setTheme"
+    />
   </div>
 </template>
 <script>
 import EbookHeader from '@/components/EbookHeader/index'
 import EbookFooter from '@/components/EbookFooter/index'
+import {ThemeList} from '@/utils/config.js'
 import Epub from 'epubjs' 
 const _staticBookUrl = '/static/Wonder.epub'
 
@@ -31,7 +39,9 @@ export default {
       rendition:'',
       themes:'',
       isShowControl:false,
-      defaultFontSize:16
+      defaultFontSize:16,
+      themeList:ThemeList,
+      defaultTheme:0  // 默认主题颜色0 1 2 3
     }
   },
   methods:{
@@ -40,6 +50,13 @@ export default {
       console.log(fontSize);
       this.defaultFontSize = fontSize
       this.themes.fontSize(`${fontSize}px`)
+    },
+    // 底部选择主题颜色事件
+    setTheme(index){
+      this.defaultTheme = index
+      if (this.themes) {
+        this.themes.select(this.themeList[index].name)
+      }
     },
     // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
     showControl(){
@@ -75,6 +92,17 @@ export default {
       // 获取到实例类的主题操作对象
       this.themes = this.rendition.themes
       this.themes.fontSize(`${this.defaultFontSize}px`)  // 初始化epub显示为自定义字号
+      // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
+      this.registerTheme()
+      this.setTheme(0)  // 直接themes.select(主题名)即可,初始化主题颜色
+    },
+    // themes实例注册主题颜色列表
+    registerTheme(){
+      if(this.themes){
+        this.themeList.forEach(item=>{
+          this.themes.register(item.name,item.style)
+        })
+      }
     }
   },
   mounted(){

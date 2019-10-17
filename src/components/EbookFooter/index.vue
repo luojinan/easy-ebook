@@ -40,7 +40,12 @@
       </div>
       <!-- 设置主题颜色部分 -->
       <div class="ebook-footer_theme" v-show="setType == 3">
-        <div class="ebook-footer_theme--item" v-for="(item,index) in themeList" :key="index">
+        <div
+          class="ebook-footer_theme--item" 
+          v-for="(item,index) in themeList" 
+          :key="index"
+          @click="setTheme(index)"
+        >
           <div 
             class="theme-item_preview" 
             :class="{'no-border':item.style.body.background!='#fff'}"
@@ -55,7 +60,6 @@
 </div>
 </template>
 <script>
-import { type } from 'os'
 export default {
   props:{
     isShow:{
@@ -72,15 +76,7 @@ export default {
     },
     themeList:{
       type:Array,
-      default:()=>[{name:'默认',style:{
-        body:{color:'#000',background:'#fff'}
-      }},{name:'护眼',style:{
-        body:{color:'#000',background:'#ceeaba'}
-      }},{name:'夜间',style:{
-        body:{color:'#fff',background:'#000'}
-      }},{name:'金黄',style:{
-        body:{color:'#000',background:'#FFD700'}
-      }}]
+      default:()=>[]
     },
     defaultTheme:{
       type:[String,Number],
@@ -94,6 +90,10 @@ export default {
     }
   },
   methods:{
+    // 选中主题颜色
+    setTheme(index){
+      this.$emit('setTheme',index)
+    },
     // 选中字号
     setFontSize(fontSize){
       this.$emit('setFontSize',fontSize)
