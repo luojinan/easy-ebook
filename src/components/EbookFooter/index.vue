@@ -1,16 +1,19 @@
 <template>
 <div class="ebook-footer_wrapper">
+  <!-- 底部操作栏部分 -->
   <transition name="slide-up">
-    <div class="ebook-footer" v-show="isShow" :class="{'hide-box-shadow':isShowSetFont||!isShow}">
+    <div class="ebook-footer" v-show="isShow" :class="{'hide-box-shadow':isShowSet||!isShow}">
       <div class="ebook-footer_icon"><span class="icon-menu icon"></span></div>
       <div class="ebook-footer_icon"><span class="icon-set icon"></span></div>
-      <div class="ebook-footer_icon"><span class="icon-bright icon"></span></div>
-      <div class="ebook-footer_icon"><span class="icon-a icon" @click="isShowSetFont=!isShowSetFont">A</span></div>
+      <div class="ebook-footer_icon"><span class="icon-bright icon" @click="showSet(3)"></span></div>
+      <div class="ebook-footer_icon"><span class="icon-a icon" @click="showSet(4)">A</span></div>
     </div>
   </transition>
+  <!-- 设置部分 -->
   <transition name="slide-up">
-    <div class="ebook-footer_setter" v-show="isShowSetFont">
-      <div class="setter-fontsize">
+    <div class="ebook-footer_setter" v-show="isShowSet">
+      <!-- 设置字号大小部分 -->
+      <div class="setter-fontsize" v-show="setType == 4">
         <!-- 左边最小字号预览 -->
         <div class="setter-fontsize_preview" :style="{fontSize:`${fontSizeList[0]}px`}">A</div>
         <!-- 中间线条选择字号 -->
@@ -35,11 +38,24 @@
         <!-- 右边最大字号预览 -->
         <div class="setter-fontsize_preview" :style="{fontSize:`${fontSizeList[fontSizeList.length-1]}px`}">A</div>
       </div>
+      <!-- 设置主题颜色部分 -->
+      <div class="ebook-footer_theme" v-show="setType == 3">
+        <div class="ebook-footer_theme--item" v-for="(item,index) in themeList" :key="index">
+          <div 
+            class="theme-item_preview" 
+            :class="{'no-border':item.style.body.background!='#fff'}"
+            :style="{'background':item.style.body.background}
+          "></div>
+          <p :class="{'selected-theme':defaultTheme==index}">{{item.name}}</p>
+        </div>
+      </div>
     </div>
   </transition>
+
 </div>
 </template>
 <script>
+import { type } from 'os'
 export default {
   props:{
     isShow:{
@@ -53,132 +69,55 @@ export default {
     defaultFontSize:{
       type:[String,Number],
       default:16
-    }
+    },
+    themeList:{
+      type:Array,
+      default:()=>[{name:'默认',style:{
+        body:{color:'#000',background:'#fff'}
+      }},{name:'护眼',style:{
+        body:{color:'#000',background:'#ceeaba'}
+      }},{name:'夜间',style:{
+        body:{color:'#fff',background:'#000'}
+      }},{name:'金黄',style:{
+        body:{color:'#000',background:'#FFD700'}
+      }}]
+    },
+    defaultTheme:{
+      type:[String,Number],
+      default:0
+    },
   },
   data(){
     return {
-      isShowSetFont:false
+      isShowSet:false,  // 设置部分(不是底部操作栏)的显示隐藏
+      setType:''  // 设置部分1-目录 2-进度 3-主题 4-字号
     }
   },
   methods:{
+    // 选中字号
     setFontSize(fontSize){
       this.$emit('setFontSize',fontSize)
+    },
+    // 切换底部操作栏-同时显示相应设置部分
+    showSet(type){
+      if(!this.isShowSet) {
+        this.setType = type
+        this.isShowSet = true
+        return
+      }
+      if(this.isShowSet&&(!this.setType||this.setType == type)) this.isShowSet = false
+      this.setType = type
     }
   },
   watch:{
+    // 监听页面显示隐藏底部操作
     isShow(newVal){
-      if(!newVal) this.isShowSetFont = false
+      if(!newVal) this.isShowSet = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '../../scss/global';
-.ebook-footer_wrapper{
-  .ebook-footer{
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: px2rem(44);
-    z-index: 102;
-    background-color: #fff;
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
-    &.hide-box-shadow{
-      box-shadow: none;
-    }
-    .ebook-footer_icon{
-      flex: 1;
-      @include center;
-      .icon-set,.icon-bright{
-        font-size: px2rem(26);
-      }
-    }
-  }
-  // 字号选择容器部分
-  .ebook-footer_setter{
-    position: absolute;
-    left: 0;
-    bottom: px2rem(44);
-    width: 100%;
-    height: px2rem(40);
-    z-index: 101;
-    background-color: #fff;
-    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
-    .setter-fontsize{
-      display: flex;
-      height: 100%;
-      // 字号选择，左右A预览部分
-      .setter-fontsize_preview{
-        flex: 0 0 px2rem(40);
-        @include center;
-      }
-      .setter-fontsize_for--firstchild{
-        flex: 1;
-        display: flex;
-        .setter-fonsize_select{
-          flex: 1;
-          display: flex;
-          &:first-child{
-            .selected-line{
-              &:first-child{
-                // background-color: red;
-                border: none;
-              }
-            }
-          }
-          &:last-child{
-            .selected-line{
-              &:last-child{
-                // background-color: red;
-                border: none;
-              }
-            }
-          }
-          .setter-fontsize_selected--warapper{
-            flex: 1;
-            display: flex;
-            align-items: center;
-            // 字号选择横线样式
-            .selected-line{
-              flex: 1;
-              height: 0;
-              border-top: px2rem(1) solid #ccc;
-            }
-            // 字号选择竖线样式
-            .selected-point_wrapper{
-              position: relative;
-              flex: 0 0 0;
-              width: 0;
-              height: px2rem(7);
-              border-left: px2rem(1) solid #ccc;
-              // 字号选择圆形样式
-              .selected-point{
-                position: absolute;
-                top: px2rem(-7);
-                left: px2rem(-10);
-                width: px2rem(18);
-                height: px2rem(18);
-                border-radius: 50%;
-                background-color: #fff;
-                border: px2rem(1) solid #ccc;
-                box-shadow: 0 px2rem(4) px2rem(4) rgba(0, 0, 0, .15);
-                @include center;
-                .selected-point_brackpoint{
-                  width: px2rem(5);
-                  height: px2rem(5);
-                  background-color: #000;
-                  border-radius: 50%;
-                }
-              }
-            }
-          }
-        }
-
-      }
-    }
-  }
-}
+@import '/index';
 </style>

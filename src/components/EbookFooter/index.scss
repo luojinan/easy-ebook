@@ -1,0 +1,137 @@
+@import '../../scss/global';
+.ebook-footer_wrapper{
+  .ebook-footer{
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: px2rem(44);
+    z-index: 102;
+    background-color: #fff;
+    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
+    &.hide-box-shadow{
+      box-shadow: none;
+    }
+    .ebook-footer_icon{
+      flex: 1;
+      @include center;
+      .icon-set,.icon-bright{
+        font-size: px2rem(26);
+      }
+    }
+  }
+  // 字号选择容器部分
+  .ebook-footer_setter{
+    position: absolute;
+    left: 0;
+    bottom: px2rem(44);
+    width: 100%;
+    height: px2rem(40);
+    z-index: 101;
+    background-color: #fff;
+    box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
+    .setter-fontsize{
+      display: flex;
+      height: 100%;
+      // 字号选择，左右A预览部分
+      .setter-fontsize_preview{
+        flex: 0 0 px2rem(40);
+        @include center;
+      }
+      .setter-fontsize_for--firstchild{
+        flex: 1;
+        display: flex;
+        .setter-fonsize_select{
+          flex: 1;
+          display: flex;
+          &:first-child{
+            .selected-line{
+              &:first-child{
+                // background-color: red;
+                border: none;
+              }
+            }
+          }
+          &:last-child{
+            .selected-line{
+              &:last-child{
+                // background-color: red;
+                border: none;
+              }
+            }
+          }
+          .setter-fontsize_selected--warapper{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            // 字号选择横线样式
+            .selected-line{
+              flex: 1;
+              height: 0;
+              border-top: px2rem(1) solid #ccc;
+            }
+            // 字号选择竖线样式
+            .selected-point_wrapper{
+              position: relative;
+              flex: 0 0 0;
+              width: 0;
+              height: px2rem(7);
+              border-left: px2rem(1) solid #ccc;
+              // 字号选择圆形样式
+              .selected-point{
+                position: absolute;
+                top: px2rem(-7);
+                left: px2rem(-10);
+                width: px2rem(18);
+                height: px2rem(18);
+                border-radius: 50%;
+                background-color: #fff;
+                border: px2rem(1) solid #ccc;
+                box-shadow: 0 px2rem(4) px2rem(4) rgba(0, 0, 0, .15);
+                @include center;
+                .selected-point_brackpoint{
+                  width: px2rem(5);
+                  height: px2rem(5);
+                  background-color: #000;
+                  border-radius: 50%;
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
+    // 主题设置内容部分
+    .ebook-footer_theme{
+      display: flex;
+      height: 100%;
+      .ebook-footer_theme--item{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: px2rem(5);
+        box-sizing: border-box;
+        .theme-item_preview{
+          flex: 1;
+          border: px2rem(1) solid #ccc;
+          box-sizing: border-box;
+          &.no-border{
+            border: none;
+          }
+        }
+        p{
+          flex: 0 0 px2rem(18);
+          font-size: px2rem(14);
+          text-align: center;
+          line-height: px2rem(18);
+          color: #999;
+          &.selected-theme{
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+}
