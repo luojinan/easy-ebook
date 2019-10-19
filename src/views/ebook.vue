@@ -37,6 +37,7 @@ export default {
   data(){
     return {
       rendition:'',
+      locations:'', // 进度对象new Epub(_staticBookUrl).locations
       themes:'',
       isShowControl:false,
       defaultFontSize:16,
@@ -45,6 +46,12 @@ export default {
     }
   },
   methods:{
+    // 底部设置进度事件
+    changeProgress(progress){
+      const precentage = progress/100 // 转换为0.xx
+      const locationPage = precentage>0?this.locations.cfiFromPercentage(precentage):0  // 某进度dom对象
+      this.rendition.display(locationPage)  // 重新渲染dom对象
+    },
     // 底部选择字号事件
     setFontSize(fontSize){
       console.log(fontSize);
@@ -95,6 +102,15 @@ export default {
       // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
       this.registerTheme()
       this.setTheme(0)  // 直接themes.select(主题名)即可,初始化主题颜色
+
+      // 获取locations进度对象（异步）
+      book.ready.then(()=>{
+        return book.locations.generate()
+      }).then(res=>{
+        console.log(res,'异步加载进度完成');
+        this.locations = book.locations
+        // this.changeProgress(100)
+      })
     },
     // themes实例注册主题颜色列表
     registerTheme(){
