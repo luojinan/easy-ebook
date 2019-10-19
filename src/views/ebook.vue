@@ -19,6 +19,9 @@
       :themeList="themeList"
       :defaultTheme="defaultTheme" 
       @setTheme="setTheme"
+      :progressAvailabe="Boolean(locations)"
+      :defaultProgress="defaultProgress" 
+      @changeProgress="changeProgress"
     />
   </div>
 </template>
@@ -42,15 +45,19 @@ export default {
       isShowControl:false,
       defaultFontSize:16,
       themeList:ThemeList,
-      defaultTheme:0  // 默认主题颜色0 1 2 3
+      defaultTheme:0,  // 默认主题颜色0 1 2 3
+      defaultProgress:0
     }
   },
   methods:{
     // 底部设置进度事件
     changeProgress(progress){
+      this.defaultProgress = progress //修改底部操作栏样式
       const precentage = progress/100 // 转换为0.xx
       const locationPage = precentage>0?this.locations.cfiFromPercentage(precentage):0  // 某进度dom对象
       this.rendition.display(locationPage)  // 重新渲染dom对象
+      
+      progress==100&&this.isShowControl&&(this.isShowControl = false)
     },
     // 底部选择字号事件
     setFontSize(fontSize){
@@ -107,9 +114,8 @@ export default {
       book.ready.then(()=>{
         return book.locations.generate()
       }).then(res=>{
-        console.log(res,'异步加载进度完成');
+        console.log('异步加载进度完成');
         this.locations = book.locations
-        // this.changeProgress(100)
       })
     },
     // themes实例注册主题颜色列表

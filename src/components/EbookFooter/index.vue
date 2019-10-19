@@ -4,7 +4,7 @@
   <transition name="slide-up">
     <div class="ebook-footer" v-show="isShow" :class="{'hide-box-shadow':isShowSet||!isShow}">
       <div class="ebook-footer_icon"><span class="icon-menu icon"></span></div>
-      <div class="ebook-footer_icon"><span class="icon-set icon"></span></div>
+      <div class="ebook-footer_icon"><span class="icon-set icon" @click="showSet(2)"></span></div>
       <div class="ebook-footer_icon"><span class="icon-bright icon" @click="showSet(3)"></span></div>
       <div class="ebook-footer_icon"><span class="icon-a icon" @click="showSet(4)">A</span></div>
     </div>
@@ -54,6 +54,22 @@
           <p :class="{'selected-theme':defaultTheme==index}">{{item.name}}</p>
         </div>
       </div>
+      <!-- 设置进度部分 -->
+      <div class="setter-progress" v-show="setType == 2">
+        <div class="setter-progress_wrapper" v-if="progressAvailabe">
+          <input 
+            type="range" 
+            max="100" 
+            min="0"
+            step="1"
+            @change="progressChange"
+            @input="progressInput"
+            :value="defaultProgress"
+            :disabled="!progressAvailabe"
+            ref="progress">{{defaultProgress+'%'}}
+        </div>
+        <p v-else>加载中...</p>
+      </div>
     </div>
   </transition>
 
@@ -82,6 +98,14 @@ export default {
       type:[String,Number],
       default:0
     },
+    progressAvailabe:{
+      type:Boolean,
+      default:false
+    },
+    defaultProgress:{
+      type:[String,Number],
+      default:10
+    }
   },
   data(){
     return {
@@ -90,6 +114,15 @@ export default {
     }
   },
   methods:{
+    // 拖动进度条时触发的事件
+    progressChange(e){
+      // js动态修改dom的样式
+      this.$refs.progress.style.backgroundSize = `${e.target.value}% 100%`
+    },
+    // 松开进度条时触发的事件
+    progressInput(e){
+      this.$emit('changeProgress',e.target.value)
+    },
     // 选中主题颜色
     setTheme(index){
       this.$emit('setTheme',index)
