@@ -21,7 +21,7 @@
       }
     }
   }
-  // 字号选择容器部分
+  // 设置容器部分
   .ebook-footer_setter{
     position: absolute;
     left: 0;
@@ -170,5 +170,16 @@
         }
       }
     }
+  }
+  // 目录半透明蒙板部分
+  .toc-mask {
+    position: absolute;
+    top: 0;
+    bottom: px2rem(44);
+    left: 0;
+    z-index: 102;
+    display: flex;
+    width: 100%;
+    background: rgba(51, 51, 51, 0.8);
   }
 }

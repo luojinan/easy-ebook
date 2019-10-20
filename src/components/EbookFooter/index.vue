@@ -3,7 +3,7 @@
   <!-- 底部操作栏部分 -->
   <transition name="slide-up">
     <div class="ebook-footer" v-show="isShow" :class="{'hide-box-shadow':isShowSet||!isShow}">
-      <div class="ebook-footer_icon"><span class="icon-menu icon"></span></div>
+      <div class="ebook-footer_icon"><span class="icon-menu icon" @click="showSet(1)"></span></div>
       <div class="ebook-footer_icon"><span class="icon-set icon" @click="showSet(2)"></span></div>
       <div class="ebook-footer_icon"><span class="icon-bright icon" @click="showSet(3)"></span></div>
       <div class="ebook-footer_icon"><span class="icon-a icon" @click="showSet(4)">A</span></div>
@@ -11,9 +11,9 @@
   </transition>
   <!-- 设置部分 -->
   <transition name="slide-up">
-    <div class="ebook-footer_setter" v-show="isShowSet">
+    <div class="ebook-footer_setter" v-show="isShowSet&&setType != 1">
       <!-- 设置字号大小部分 -->
-      <div class="setter-fontsize" v-show="setType == 4">
+      <div class="setter-fontsize" v-if="setType == 4">
         <!-- 左边最小字号预览 -->
         <div class="setter-fontsize_preview" :style="{fontSize:`${fontSizeList[0]}px`}">A</div>
         <!-- 中间线条选择字号 -->
@@ -39,7 +39,7 @@
         <div class="setter-fontsize_preview" :style="{fontSize:`${fontSizeList[fontSizeList.length-1]}px`}">A</div>
       </div>
       <!-- 设置主题颜色部分 -->
-      <div class="ebook-footer_theme" v-show="setType == 3">
+      <div class="ebook-footer_theme" v-else-if="setType == 3">
         <div
           class="ebook-footer_theme--item" 
           v-for="(item,index) in themeList" 
@@ -55,7 +55,7 @@
         </div>
       </div>
       <!-- 设置进度部分 -->
-      <div class="setter-progress" v-show="setType == 2">
+      <div class="setter-progress" v-else-if="setType == 2">
         <div class="setter-progress_wrapper" v-if="progressAvailabe">
           <input 
             type="range" 
@@ -72,11 +72,25 @@
       </div>
     </div>
   </transition>
+  <!-- 设置目录部分 -->
+  <toc 
+    v-if="isShowSet&&setType==1"
+    :navigation="navigation"
+    :tocAvailable="progressAvailabe"
+    @toPage="toPage"
+  ></toc>
+  <transition name="fade">
+    <div class="toc-mask" v-show="isShowSet&&setType==1" @click="isShowSet = false"></div>
+  </transition>
 
 </div>
 </template>
 <script>
+import Toc from './Toc.vue'
 export default {
+  components:{
+    Toc
+  },
   props:{
     isShow:{
       type:Boolean,
@@ -105,6 +119,10 @@ export default {
     defaultProgress:{
       type:[String,Number],
       default:10
+    },
+    navigation:{
+      type:Object,
+      default:()=>{}
     }
   },
   data(){
@@ -114,6 +132,11 @@ export default {
     }
   },
   methods:{
+    // 跳转到目录页
+    toPage(item){
+      this.isShowSet = false
+      this.$emit('toPage',item)
+    },
     // 拖动进度条时触发的事件
     progressChange(e){
       // js动态修改dom的样式

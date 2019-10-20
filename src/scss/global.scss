@@ -29,15 +29,32 @@ $fonSize: 37.5; // 写死！这个fontSize不是根元素自适应那个
 .slide-down-enter, .slide-down-leave-to{
   transform: translate3d(0, -100%,0); // 向下动画
 }
-.slide-down-enter-to, .slide-down-leave,
-.slide-up-enter-to, .slide-up-enter-leave{
-  transform: translate3d(0,0,0);  // 恢复原位动画
-}
 .slide-up-enter,.slide-up-leave-to{
   transform: translate3d(0,px2rem(92),0); // 向上动画
   // transform: translate3d(0,100%,0); // 向上动画
 }
+// 目录抽屉右滑动画
+.slide-right-enter{
+  transform: translate3d(100%, 0, 0);  // 向右动画（一个name只能定义个方向，做不到同时左滑右滑）
+}
+.slide-right-leave-to {
+  transform: translate3d(-100%, 0, 0);  // 向左动画
+}
+.slide-down-enter-to, .slide-down-leave,
+.slide-up-enter-to, .slide-up-enter-leave
+.slide-right-enter-to, .slide-right-leave{
+  transform: translate3d(0,0,0);  // 恢复原位动画
+}
 .slide-up-enter-active, .slide-down-leave-active,
-.slide-down-enter-active, .slide-up-leave-active{
+.slide-down-enter-active, .slide-up-leave-active,
+.fade-enter-active,.fade-leave-active,
+.slide-right-enter-active, .slide-right-leave-active{
   transition: all .2s linear;
+}
+// 蒙板渐隐渐现动画
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to, .fade-leave {
+  opacity: 1;
 }

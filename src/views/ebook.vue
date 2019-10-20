@@ -22,6 +22,8 @@
       :progressAvailabe="Boolean(locations)"
       :defaultProgress="defaultProgress" 
       @changeProgress="changeProgress"
+      :navigation="navigation"
+      @toPage="toPage"
     />
   </div>
 </template>
@@ -41,6 +43,7 @@ export default {
     return {
       rendition:'',
       locations:'', // 进度对象new Epub(_staticBookUrl).locations
+      navigation:{},  // 目录对象new Epub(_staticBookUrl).navigation
       themes:'',
       isShowControl:false,
       defaultFontSize:16,
@@ -50,6 +53,20 @@ export default {
     }
   },
   methods:{
+    toPage(item){
+      this.isShowControl = false
+      this.rendition.display(item.href).then(() => {
+        this.updateProgress();
+        // 利用then，只有输入进度改变页面，页面改变没有去获取新的进度
+      });
+    },
+    updateProgress() {
+      const curLocation = this.rendition.currentLocation()  // 获取当前进度对象
+      const percentage = Boolean(this.locations) // 确保而已，实际一定为true
+        ? this.locations.percentageFromCfi(curLocation.start.cfi) // 获取进度的具体比例%
+        : 0;
+      this.defaultProgress = Math.round(percentage * 100); // 进度比例转化为数值
+    },
     // 底部设置进度事件
     changeProgress(progress){
       this.defaultProgress = progress //修改底部操作栏样式
@@ -112,7 +129,8 @@ export default {
 
       // 获取locations进度对象（异步）
       book.ready.then(()=>{
-        return book.locations.generate()
+        this.navigation = book.navigation // 目录
+        return book.locations.generate()  // 进度
       }).then(res=>{
         console.log('异步加载进度完成');
         this.locations = book.locations
